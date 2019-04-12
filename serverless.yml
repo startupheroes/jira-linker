@@ -1,0 +1,14 @@
+service: jira-linker
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: ${env:AWS_REGION}
+
+functions:
+  jira-linker:
+    handler: handler.probot
+    events:
+    - http:
+        path: /hook
+        method: post
