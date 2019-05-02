@@ -1,11 +1,11 @@
 const settings = require('./config.json')
+const getConfig = require('probot-config')
 module.exports = app => {
   app.on('pull_request.opened', async context => {
     // app.log(context.payload.pull_request)
     const title = context.payload.pull_request.title
     const code = title.split(':')[0]
-    const url = 'https://' + settings.host + '/browse/' + code
-    const markdownLink = '[' + code + '](' + url + ')'
+
     // const commitLink = context.payload.pull_request.commits_url
 
     // app.log(commitLink) // works correctly
@@ -22,19 +22,23 @@ module.exports = app => {
       app.log(response.statusCode)
       if (!error && response.statusCode === 200) {
         app.log(body) // Print the json response
-      } else { app.log('bok') }
+      } else { app.log('bk') }
     })
 */
-    var JiraApi = require('jira-client')
-    var jira = new JiraApi({
+    const config = await getConfig(context, 'config.yml')
+    //app.log(config)
+    let JiraApi = require('jira-client')
+    let jira = new JiraApi({
       protocol: 'https',
-      host: process.env.HOST || settings.host,
-      username: process.env.USERNAME || settings.username,
-      password: process.env.PASSWORD || settings.password,
+      host: process.env.HOST || config.host,
+      username: process.env.USERNAME || config.username,
+      password: process.env.PASSWORD || config.password,
       apiVersion: '2',
       strictSSL: true
     })
 
+    const url = 'https://' + config.host + '/browse/' + code
+    const markdownLink = '[' + code + '](' + url + ')'
     jira.findIssue(code)
       .then(function (issue) {
         // console.log('Description: ' + issue.fields.description)
@@ -43,7 +47,7 @@ module.exports = app => {
         } else if (issue == null || issue.key == null || issue.key != code) {
           return context.github.issues.createComment({ ...context.issue(), body: 'Issue not found.' })
         }
-        app.log(issue.fields)
+        //app.log(issue.fields)
         return context.github.issues.createComment({ ...context.issue(), body: '### ' + markdownLink + ': ' + issue.fields.summary + '\n\n ```\n' + issue.fields.description + '\n```' })
       })
       .catch(function (err) {
