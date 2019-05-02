@@ -25,7 +25,7 @@ module.exports = app => {
       } else { app.log('bk') }
     })
 */
-    const config = await getConfig(context, 'config.yml')
+    const config = await getConfig(context, 'jira-linker.yml')
     //app.log(config)
     let JiraApi = require('jira-client')
     let jira = new JiraApi({
