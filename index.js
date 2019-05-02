@@ -6,12 +6,13 @@ module.exports = app => {
     const code = title.split(':')[0]
     const url = 'https://' + settings.host + '/browse/' + code
     const markdownLink = '[' + code + '](' + url + ')'
-    const commitLink = context.payload.pull_request.commits_url
-/*
+    // const commitLink = context.payload.pull_request.commits_url
+
     // app.log(commitLink) // works correctly
+    /*
     var request = require('request')
     request({
-      url: commitLink+'/e1391a78184a1e2efefb5c7b8f83b4c89ea6d362',
+      url: commitLink,
       json: true,
       headers: {
         'User-Agent': 'request'
@@ -27,9 +28,9 @@ module.exports = app => {
     var JiraApi = require('jira-client')
     var jira = new JiraApi({
       protocol: 'https',
-      host: settings.host,
-      username: settings.username,
-      password: settings.password,
+      host: process.env.HOST || settings.host,
+      username: process.env.USERNAME || settings.username,
+      password: process.env.PASSWORD || settings.password,
       apiVersion: '2',
       strictSSL: true
     })
@@ -42,7 +43,8 @@ module.exports = app => {
         } else if (issue == null || issue.key == null || issue.key != code) {
           return context.github.issues.createComment({ ...context.issue(), body: 'Issue not found.' })
         }
-        return context.github.issues.createComment({ ...context.issue(), body: markdownLink + ':\n' + issue.fields.description })
+        app.log(issue.fields)
+        return context.github.issues.createComment({ ...context.issue(), body: '### ' + markdownLink + ': ' + issue.fields.summary + '\n\n ```\n' + issue.fields.description + '\n```' })
       })
       .catch(function (err) {
         return context.github.issues.createComment({ ...context.issue(), body: 'Issue not found.' })
