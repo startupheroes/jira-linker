@@ -1,12 +1,12 @@
 {
-  "name": "Lightning",
+  "name": "jira-linker",
   "version": "1.0.0",
-  "description": "bisey denicem",
+  "description": "A GitHub App built with Probot that comments a jira link on pull request.",
   "author": "Ahmet Gedemenli <afgedemenli@gmail.com>",
   "license": "ISC",
-  "repository": "https://github.com//lightning.git",
-  "homepage": "https://github.com//lightning",
-  "bugs": "https://github.com//lightning/issues",
+  "repository": "https://github.com/startupheroes/jira-linker.git",
+  "homepage": "https://github.com/startupheroes/jira-linker.git",
+  "bugs": "https://github.com/startupheroes/jira-linker/issues",
   "keywords": [
     "probot",
     "github",
@@ -22,7 +22,9 @@
   "dependencies": {
     "@probot/serverless-lambda": "^0.3.0",
     "probot": "^7.2.0",
-    "testing": "^1.1.2"
+    "testing": "^1.1.2",
+    "jira-client": "6.7.1",
+    "probot-config": "^0.1.0"
   },
   "devDependencies": {
     "jest": "^24.0.0",
